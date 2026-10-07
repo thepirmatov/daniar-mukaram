@@ -1,0 +1,20 @@
+{
+  "eventType": "wedding",
+  "coupleNames": "Данияр & Мукарам",
+  "date": "2026-11-06",
+  "time": "17:00",
+  "venueName": "«Үч-Бай»",
+  "venueAddress": "Ноокат району",
+  "mapUrl": "https://maps.app.goo.gl/27CDr5fvweNVwexX8?g_st=aw",
+  "schedule": [
+    { "time": "17:00", "label": "Тойдун башталышы" }
+  ],
+  "hostsNames": "Муратали & Гүлнара",
+  "heroPhotoUrl": "photos/hero.jpg",
+  "musicUrl": "assets/music.mp3",
+  "colorTheme": {
+    "primary": "#5b5146",
+    "accent": "#c6a15b",
+    "background": "#faf5ea"
+  }
+}
