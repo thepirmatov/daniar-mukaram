@@ -250,6 +250,12 @@ function setupRevealGate() {
     setTimeout(() => {
       gate.style.display = 'none';
     }, 700);
+    // Lets setupScrollReveal's safety net restart its countdown from the
+    // moment the guest can actually see the content, instead of from page
+    // load (see comment there - a gate can sit open for well over 4s while
+    // read, which would otherwise burn through that window before any real
+    // scrolling happens).
+    document.dispatchEvent(new CustomEvent('invitation:revealed'));
 
     const audio = document.getElementById('bg-music');
     const musicToggle = document.getElementById('music-toggle');
@@ -294,10 +300,26 @@ function setupScrollReveal() {
   // the observer never fires for some reason (throttled background tab,
   // an odd viewport/iframe edge case, etc.) - reliability matters far more
   // here than the reveal-on-scroll effect for whatever is still off-screen.
-  setTimeout(() => {
-    sections.forEach((section) => section.classList.add('is-visible'));
-    observer.disconnect();
-  }, 4000);
+  const armSafetyNet = () => {
+    setTimeout(() => {
+      sections.forEach((section) => section.classList.add('is-visible'));
+      observer.disconnect();
+    }, 4000);
+  };
+
+  // A reveal-gate (envelope/wax-seal "tap to open") hides all of this behind
+  // a full-screen cover until the guest taps it, often well past 4s while
+  // they read it - arming the safety net immediately would reveal
+  // everything before the gate is ever opened, so there'd be nothing left
+  // to animate by the time it is. Wait for the gate's own "opened" signal
+  // first (see setupRevealGate) so the 4s window starts from when the
+  // content can actually be seen; templates without a gate have no such
+  // signal to wait for, so they keep today's immediate arming.
+  if (document.getElementById('reveal-gate')) {
+    document.addEventListener('invitation:revealed', armSafetyNet, { once: true });
+  } else {
+    armSafetyNet();
+  }
 }
 
 function formatDate(dateStr) {
