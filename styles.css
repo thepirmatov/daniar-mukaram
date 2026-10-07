@@ -603,3 +603,27 @@ h2 {
     transition: opacity 1.2s ease-out, transform 1.2s ease-out;
   }
 }
+
+/* Staggered cascade for grouped items (countdown cards, schedule rows,
+   collage photos) - each waits an extra beat after the one before it,
+   but only once its own section has scrolled into view, so nothing
+   animates before the guest can actually see it. */
+@media (prefers-reduced-motion: no-preference) {
+  .schedule-list li,
+  .collage-grid a {
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+  }
+
+  .reveal-on-scroll.is-visible .schedule-list li,
+  .reveal-on-scroll.is-visible .collage-grid a {
+    opacity: 1;
+    transform: none;
+  }
+
+  .schedule-list li:nth-child(1), .collage-grid a:nth-child(1) { transition-delay: 0.05s; }
+  .schedule-list li:nth-child(2), .collage-grid a:nth-child(2) { transition-delay: 0.18s; }
+  .schedule-list li:nth-child(3), .collage-grid a:nth-child(3) { transition-delay: 0.31s; }
+  .schedule-list li:nth-child(4), .collage-grid a:nth-child(4) { transition-delay: 0.44s; }
+}
